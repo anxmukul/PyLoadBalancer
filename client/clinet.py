@@ -10,7 +10,7 @@ def call_load_balancer(host, port, msg):
 
 
 if __name__ == "__main__":
-    lb_host = "127.0.0.1"
+    lb_host = "127.0.0.0"
     lb_port = 8080
 
     for i in range(10):

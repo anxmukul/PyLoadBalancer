@@ -20,7 +20,7 @@ class LoadBalancer:
             while True:
                 client_socket, client_address = lb_socket.accept()
                 backend_server = self.strategy.get_server()
-                print(f"Forwarding request to {backend_server}")
+                print(f"Got call from {client_address}: Forwarding request to {backend_server}")
                 handle_backend_communication(client_socket, backend_server)
 
     def add_server(self, server):
@@ -28,6 +28,6 @@ class LoadBalancer:
 
 
 if __name__ == "__main__":
-    lb = LoadBalancer("0.0.0.0", 8080)
+    lb = LoadBalancer("127.0.0.0", 8080)
     lb.start()
     # print('Object lb: ', lb.__dict__)
