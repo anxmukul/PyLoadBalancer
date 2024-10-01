@@ -18,7 +18,7 @@ PyBalancer is a custom load balancer implemented from scratch in Python. It list
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/PyLoadBalancer.git
+   git clone https://github.com/anxmukul/PyLoadBalancer.git
    cd PyLoadBalancer
    ```
 
