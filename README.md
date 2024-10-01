@@ -11,7 +11,7 @@ PyBalancer is a custom load balancer implemented from scratch in Python. It list
 
 
 ## Requirements
-- Python 3.12.3
+- Python 3.10+
 - Install dependencies via `requirements.txt`:
 
 ## Installation
@@ -23,6 +23,7 @@ PyBalancer is a custom load balancer implemented from scratch in Python. It list
    ```
 
 2. Set up a virtual environment (optional but recommended):
+   Go to project root directory
     ```bash
     python3 -m venv venv
     source venv/bin/activate
@@ -39,9 +40,9 @@ PyBalancer is a custom load balancer implemented from scratch in Python. It list
    make run
    ```
    This command will:
-   Start 3 backend servers on ports 8001, 8002, and 8003.
-   Start the load balancer, which will distribute traffic among the backend servers.
-   Simulate client requests.
+   - Start 3 backend servers on ports 8001, 8002, and 8003.
+   - Start the load balancer, which will distribute traffic among the backend servers.
+   - Simulate client requests.
 
 2. Stop the servers and clean up:
    ```bash
