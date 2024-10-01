@@ -1,8 +1,10 @@
 # Makefile for PyLoadBalancer
 
-.PHONY: all start_bs start_lb start_client close
+.PHONY: all start_bs start_lb start_client close close_bs close_lb
 
 run: start_bs start_lb start_client
+
+close: close_lb close_bs
 
 start_bs:
 	@echo "Starting backend servers..."
