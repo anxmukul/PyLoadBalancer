@@ -1,4 +1,6 @@
 import socket
+import time
+
 import yaml
 
 
@@ -12,6 +14,20 @@ def call_load_balancer(host, port, msg):
 
 class ConfigError(Exception):
     pass
+
+
+def wait_for_load_balancer(host, port, max_attempts=5):
+    for attempts in range(max_attempts):
+        print("Trying to connect with load balancer...")
+        try:
+            with socket.create_connection((host, port), timeout=1):
+                print("Load balancer is ready!")
+                return
+        except (ConnectionRefusedError, OSError):
+            print("Waiting for load balancer...")
+            time.sleep(2)
+    print("Failed to connect to load balancer after several attempts.")
+    exit(1)
 
 
 def load_config():
@@ -28,8 +44,8 @@ def load_config():
 if __name__ == "__main__":
     try:
         load_balancer_config = load_config()
-
-        for i in range(10):
+        wait_for_load_balancer(load_balancer_config["host"], load_balancer_config["port"], 5)
+        for i in range(555):
             call_load_balancer(load_balancer_config["host"], load_balancer_config["port"], f"Request from client {i}")
     except ConfigError as e:
         print(e)
