@@ -1,14 +1,17 @@
 import socket
-from backend_server_config import backend_servers
+import sys
+
+import yaml
+
 from balancing_strategies.round_robin import RoundRobinStrategy
 from server_handler import handle_backend_communication
 
 
 class LoadBalancer:
-    def __init__(self, host, port):
+    def __init__(self, host, port, servers):
         self.host = host
         self.port = port
-        self.backend_servers = backend_servers
+        self.backend_servers = servers
         self.strategy = RoundRobinStrategy(self.backend_servers)
 
     def start(self):
@@ -23,11 +26,29 @@ class LoadBalancer:
                 print(f"Got call from {client_address}: Forwarding request to {backend_server}")
                 handle_backend_communication(client_socket, backend_server)
 
-    def add_server(self, server):
-        pass
+
+class ConfigError(Exception):
+    pass
+
+
+def load_config():
+    try:
+        with open('../config.yaml', 'r') as config_file:
+            parsed_config = yaml.safe_load(config_file)
+        return parsed_config["backend_servers"], parsed_config["load_balancer"]
+    except FileNotFoundError:
+        raise ConfigError("Configuration file not found. Please check the file path.")
+    except KeyError as e:
+        raise ConfigError(f"Missing key in configuration: {e}")
 
 
 if __name__ == "__main__":
-    lb = LoadBalancer("127.0.0.0", 8080)
-    lb.start()
-    # print('Object lb: ', lb.__dict__)
+    try:
+        backend_servers, load_balancer = load_config()
+        print(f"Configuration from YAML file is {backend_servers}, {load_balancer}")
+        backend_servers = [(server["host"], server["port"]) for server in backend_servers]
+        lb = LoadBalancer(load_balancer["host"], load_balancer["port"], backend_servers)
+        lb.start()
+    except ConfigError as e:
+        print(e)
+        sys.exit(1)
