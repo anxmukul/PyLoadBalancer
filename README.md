@@ -52,7 +52,6 @@ PyBalancer is a custom load balancer implemented from scratch in Python. It list
    ```bash
    make close_lb
    make close_bs
-   make close_client
    ```
 
 
