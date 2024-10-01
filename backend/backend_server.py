@@ -1,5 +1,11 @@
 import socket
+import sys
 import threading
+import yaml
+
+
+class ConfigError(Exception):
+    pass
 
 
 def start_backend_server(host, port):
@@ -18,11 +24,13 @@ def start_backend_server(host, port):
                     client_socket.sendall(response.encode())
 
 
-def run_servers(host, backend_server_ports):
+def run_servers(backend_server):
     threads = []
 
-    for b_port in backend_server_ports:
-        thread = threading.Thread(target=start_backend_server, args=(host, b_port))
+    for server in backend_servers:
+        host = server["host"]
+        port = server["port"]
+        thread = threading.Thread(target=start_backend_server, args=(host, port))
         thread.start()
         threads.append(thread)
 
@@ -30,7 +38,21 @@ def run_servers(host, backend_server_ports):
         thread.join()
 
 
+def load_config():
+    try:
+        with open("../config.yaml", 'r') as config_file:
+            config = yaml.safe_load(config_file)
+        return config["backend_servers"]
+    except FileNotFoundError:
+        raise ConfigError("Configuration file not found. Please check the file path.")
+    except KeyError as e:
+        raise ConfigError(f"Missing key in configuration: {e}")
+
+
 if __name__ == "__main__":
-    host = "127.0.0.1"
-    port = [8001, 8002, 8003]
-    run_servers(host, port)
+    try:
+        backend_servers = load_config()
+        run_servers(backend_servers)
+    except ConfigError as e:
+        print(e)
+        sys.exit(1)
