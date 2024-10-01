@@ -1,4 +1,5 @@
 import socket
+import yaml
 
 
 def call_load_balancer(host, port, msg):
@@ -9,9 +10,27 @@ def call_load_balancer(host, port, msg):
         print(f"Received: {response}")
 
 
-if __name__ == "__main__":
-    lb_host = "127.0.0.0"
-    lb_port = 8080
+class ConfigError(Exception):
+    pass
 
-    for i in range(10):
-        call_load_balancer(lb_host, lb_port, f"Request from client {i}")
+
+def load_config():
+    try:
+        with open("../config.yaml", 'r') as config_file:
+            config = yaml.safe_load(config_file)
+        return config["load_balancer"]
+    except FileNotFoundError:
+        raise ConfigError("Configuration file not found. Please check the file path.")
+    except KeyError as e:
+        raise ConfigError(f"Missing key in configuration: {e}")
+
+
+if __name__ == "__main__":
+    try:
+        load_balancer_config = load_config()
+
+        for i in range(10):
+            call_load_balancer(load_balancer_config["host"], load_balancer_config["port"], f"Request from client {i}")
+    except ConfigError as e:
+        print(e)
+        exit(1)
