@@ -9,9 +9,6 @@ PyBalancer is a custom load balancer implemented from scratch in Python. It list
 - Supports different load balancing algorithms.
 - Logging for better observability
 
-## Project Structure
-load_balancer_project/ │ ├── src/ │ ├── init.py │ ├── load_balancer.py │ ├── server_handler.py │ ├── health_check.py │ └── balancing_strategies/ │ ├── init.py │ ├── round_robin.py │ ├── least_conn.py │ └── ip_hash.py │ ├── tests/ │ ├── init.py │ ├── test_load_balancer.py │ └── test_health_check.py │ ├── Makefile └── README.md
-
 
 ## Requirements
 - Python 3.12.3
@@ -34,11 +31,27 @@ load_balancer_project/ │ ├── src/ │ ├── init.py │ ├── lo
 3. Install the required dependencies:
     ```bash
     pip install -r requirements.txt
+   ```
 
+## Usage
+1. Start the backend servers, load balancer, and client using make:
+   ```bash
+   make run
+   ```
+   This command will:
+   Start 3 backend servers on ports 8001, 8002, and 8003.
+   Start the load balancer, which will distribute traffic among the backend servers.
+   Simulate client requests.
 
-    
-
-
-
+2. Stop the servers and clean up:
+   ```bash
+   make close
+   ```
+3. You can stop each one of them using these command:
+   ```bash
+   make close_lb
+   make close_bs
+   make close_client
+   ```
 
 
