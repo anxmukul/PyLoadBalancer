@@ -15,6 +15,7 @@ class LoadBalancer:
         self.strategy = RoundRobinStrategy(self.backend_servers)
 
     def start(self):
+        print(f"Starting load balancer on {self.host}:{self.port}")
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as lb_socket:
             lb_socket.bind((self.host, self.port))
             lb_socket.listen(10)
@@ -23,7 +24,7 @@ class LoadBalancer:
             while True:
                 client_socket, client_address = lb_socket.accept()
                 backend_server = self.strategy.get_server()
-                print(f"Got call from {client_address}: Forwarding request to {backend_server}")
+                print(f"Got a client: {client_address}: assigning server {backend_server}")
                 handle_backend_communication(client_socket, backend_server)
 
 

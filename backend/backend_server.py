@@ -9,6 +9,7 @@ class ConfigError(Exception):
 
 
 def start_backend_server(host, port):
+    print("Starting backend server on {}:{}".format(host, port))
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as backend_socket:
         backend_socket.bind((host, port))
         backend_socket.listen(3)
@@ -17,10 +18,10 @@ def start_backend_server(host, port):
         while True:
             client_socket, client_address = backend_socket.accept()
             with client_socket:
-                print(f"Backend server on port {port}: Connected to {client_address}")
+                print(f"Server on {port}: Connected to {client_address}")
                 data = client_socket.recv(4096)
                 if data:
-                    response = f"Response from backend server on port {port}: {data.decode()}"
+                    response = f"Hii from server on{port}: {data.decode()}"
                     client_socket.sendall(response.encode())
 
 
